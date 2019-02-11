@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <site-header />
-    <div class="article">
+    <div class="article" v-if="article">
       <h2 class="title">{{ article.title }}</h2>
       <div class="meta">
         <div class="meta-item category">
@@ -54,39 +54,50 @@ export default {
   name: 'ArticleDetail',
   data () {
     return {
-      article: {}
+      article: null
+    }
+  },
+  watch: {
+    article: function (article) {
+      if (article) {
+        setTimeout(() => {
+          this.handleShare()
+        }, 1000)
+      }
     }
   },
   mounted () {
-    this.handleShare()
     this.fetchArticleDetail()
   },
   methods: {
     async handleShare () {
-      const { data: { result } } = await axios.get(`/api/wechat/params?url=${encodeURIComponent(location.href)}`)
+      const { data: { result } } = await axios.get(`/api/wechat/params?url=${encodeURIComponent(location.href.split('#')[0])}`)
       const _this = this
 
+      // eslint-disable-next-line
       wx.config({
-        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId: result.appId, // 必填，公众号的唯一标识
         timestamp: result.timestamp, // 必填，生成签名的时间戳
         nonceStr: result.noncestr, // 必填，生成签名的随机串
-        signature: result.signature,// 必填，签名
+        signature: result.signature, // 必填，签名
         jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
       })
 
+      // eslint-disable-next-line
       wx.ready(function () {      //需在用户可能点击分享按钮前就先调用
+        // eslint-disable-next-line
         wx.updateAppMessageShareData({
           title: _this.article.title, // 分享标题
           desc: _this.article.description,
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: _this.article.thumb // 分享图标
+          link: location.origin + location.pathname, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: _this.article.thumb || 'https://m.sweetsmartstrongshen.cc/logo_s.png' // 分享图标
         })
+        // eslint-disable-next-line
         wx.updateTimelineShareData({
           title: _this.article.title, // 分享标题
-          desc: _this.article.description,
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: _this.article.thumb // 分享图标
+          link: location.origin + location.pathname, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: _this.article.thumb || 'https://m.sweetsmartstrongshen.cc/logo_s.png' // 分享图标
         })
       })
     },

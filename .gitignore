@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+/xbblog-mobile
 
 # local env files
 .env.local

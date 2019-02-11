@@ -1,7 +1,7 @@
 <template>
-  <header class="header">
+  <router-link tag="header" to="/" class="header">
     <img class="logo" src="@/assets/logo.png" />
-  </header>
+  </router-link>
 </template>
 
 <script>
