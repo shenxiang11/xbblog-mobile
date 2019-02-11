@@ -90,13 +90,13 @@ export default {
         wx.updateAppMessageShareData({
           title: _this.article.title, // 分享标题
           desc: _this.article.description,
-          link: location.origin + location.pathname, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: location.origin + location.pathname + location.search, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: _this.article.thumb || 'https://m.sweetsmartstrongshen.cc/logo_s.png' // 分享图标
         })
         // eslint-disable-next-line
         wx.updateTimelineShareData({
           title: _this.article.title, // 分享标题
-          link: location.origin + location.pathname, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          link: location.origin + location.pathname + location.search, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: _this.article.thumb || 'https://m.sweetsmartstrongshen.cc/logo_s.png' // 分享图标
         })
       })
